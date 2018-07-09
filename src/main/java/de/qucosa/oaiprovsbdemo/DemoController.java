@@ -1,5 +1,6 @@
 package de.qucosa.oaiprovsbdemo;
 
+import de.qucosa.oaiprovsbdemo.configs.AppConf;
 import de.qucosa.oaiprovsbdemo.dao.DemoDao;
 import de.qucosa.oaiprovsbdemo.model.DemoData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,15 @@ public class DemoController {
     @Autowired
     private DemoDao demoDao;
 
+    @Autowired
+    AppConf appConf;
+
     @Value("${db.type}")
     private String dbtype;
 
     @RequestMapping(value = "/db", method = RequestMethod.GET, produces = "text/plain")
     public String dbtype() {
-        return dbtype;
+        return appConf.dissTermsConf().blabla();
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "text/plain")
