@@ -1,12 +1,12 @@
 package de.qucosa.oaiprovsbdemo.dao;
 
 import de.qucosa.oaiprovsbdemo.model.DemoData;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
+@Repository
 public class DemoDao {
 
     private Set<DemoData> dataSet = new HashSet() {
