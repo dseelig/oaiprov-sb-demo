@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RequestMapping("/demotest")
 @RestController
 public class DemoController {
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private DemoDao demoDao;
@@ -38,7 +42,10 @@ public class DemoController {
     @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public DemoData hello(@PathVariable String name) {
         DemoData data = demoDao.greetUser(name);
-        System.out.println(data.getName());
+
+        String surname = restTemplate.getForObject("http://localhost:8080/surnames/" + name, String.class);
+
+        System.out.println(data.getName() + " - " + surname);
         return data;
     }
 
