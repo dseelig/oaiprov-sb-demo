@@ -12,6 +12,10 @@ public class AppConf {
     @Autowired
     private Environment environment;
 
+    public String appUrl() {
+        return environment.getProperty("app.url");
+    }
+
     @Bean
     public DissTermsConf dissTermsConf() {
         return new DissTermsConf(environment.getProperty("db.type"));
