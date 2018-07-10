@@ -43,7 +43,7 @@ public class DemoController {
     public DemoData hello(@PathVariable String name) {
         DemoData data = demoDao.greetUser(name);
 
-        String surname = restTemplate.getForObject("http://localhost:8080/surnames/" + name, String.class);
+        String surname = restTemplate.getForObject(appConf.appUrl() + "/surnames/" + name, String.class);
 
         System.out.println(data.getName() + " - " + surname);
         return data;
