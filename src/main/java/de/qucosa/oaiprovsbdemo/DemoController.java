@@ -42,9 +42,8 @@ public class DemoController {
     @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public DemoData hello(@PathVariable String name) {
         DemoData data = demoDao.greetUser(name);
-
         String surname = restTemplate.getForObject(appConf.appUrl() + "/surnames/" + name, String.class);
-
+        data.setSurname(surname);
         System.out.println(data.getName() + " - " + surname);
         return data;
     }
