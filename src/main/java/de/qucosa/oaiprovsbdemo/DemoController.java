@@ -1,56 +1,42 @@
 package de.qucosa.oaiprovsbdemo;
 
-import de.qucosa.oaiprovsbdemo.configs.AppConf;
-import de.qucosa.oaiprovsbdemo.dao.DemoDao;
-import de.qucosa.oaiprovsbdemo.model.DemoData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-@RequestMapping("/demotest")
+@RequestMapping("/oai")
 @RestController
 public class DemoController {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private Logger logger = LoggerFactory.getLogger(DemoController.class);
 
-    @Autowired
-    private DemoDao demoDao;
-
-    @Autowired
-    AppConf appConf;
-
-    @Value("${db.type}")
-    private String dbtype;
-
-    @RequestMapping(value = "/db", method = RequestMethod.GET, produces = "text/plain")
-    public String dbtype() {
-        return appConf.dissTermsConf().blabla();
+    @GetMapping
+    public ResponseEntity find() {
+        return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = "text/plain")
-    public String hello() {
-        return demoDao.greet();
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity save(@RequestBody String input) {
+
+        if (input == null || input.equals("")) {
+            return new ResponseEntity("data is corrupt.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity("record data is saved.", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public DemoData hello(@PathVariable String name) {
-        DemoData data = demoDao.greetUser(name);
-        String surname = restTemplate.getForObject(appConf.appUrl() + "/surnames/" + name, String.class);
-        data.setSurname(surname);
-        System.out.println(data.getName() + " - " + surname);
-        return data;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public DemoData postData(@RequestBody DemoData input) {
-        System.out.println(input);
-        return input;
+    @DeleteMapping
+    public ResponseEntity delete(@RequestHeader(value = "uid") String uid, @RequestHeader(value = "undo", required = false) String undo) {
+        return new ResponseEntity("record data is deleted.", HttpStatus.OK);
     }
 }
